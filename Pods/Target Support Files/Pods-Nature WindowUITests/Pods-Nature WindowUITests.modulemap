@@ -1,0 +1,6 @@
+framework module Pods_Nature_WindowUITests {
+  umbrella header "Pods-Nature WindowUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
