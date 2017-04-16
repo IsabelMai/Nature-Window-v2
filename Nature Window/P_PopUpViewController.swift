@@ -36,6 +36,8 @@ class P_PopUpViewController: UIViewController, UITabBarControllerDelegate {
         
         self.tabBarController?.delegate = self
         
+        self.view.backgroundColor = UIColor.white.withAlphaComponent(0.4)
+        
         //self.view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
 
         // Do any additional setup after loading the view.

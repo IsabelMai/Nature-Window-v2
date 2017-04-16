@@ -31,6 +31,7 @@
                                 <gestureRecognizers/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="OmV-Z3-BHU" appends="YES" id="PfT-0y-ZDg"/>
+                                    <outletCollection property="gestureRecognizers" destination="kjh-Fr-j5p" appends="YES" id="Kwb-jL-XjL"/>
                                 </connections>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="No sound is currently playing" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b2S-9h-I1e">
@@ -59,6 +60,11 @@
                         <outlet property="delegate" destination="cVj-LW-gwY" id="ESW-Pq-1OK"/>
                     </connections>
                 </tapGestureRecognizer>
+                <swipeGestureRecognizer cancelsTouchesInView="NO" direction="left" id="kjh-Fr-j5p">
+                    <connections>
+                        <action selector="leftSwipe:" destination="9pv-A4-QxB" id="Lhx-Bk-G9X"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="749.60000000000002" y="-320.68965517241384"/>
         </scene>
@@ -117,20 +123,18 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.96862745098039216" green="0.96470588235294119" blue="0.96470588235294119" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hWk-Vu-Av7">
+                            <button opaque="NO" alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hWk-Vu-Av7">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="241"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.96862745098039216" green="0.96470588235294119" blue="0.96470588235294119" alpha="0.25" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Button"/>
                                 <connections>
                                     <action selector="closePopUp:" destination="b1I-GG-zs9" eventType="touchUpInside" id="VrO-1J-bRC"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uXy-Qt-Up8">
+                            <button opaque="NO" alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uXy-Qt-Up8">
                                 <rect key="frame" x="0.0" y="387" width="375" height="280"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.96862745100000003" green="0.96470588239999999" blue="0.96470588239999999" alpha="0.25" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Button"/>
                                 <connections>
                                     <action selector="closePopUp2:" destination="b1I-GG-zs9" eventType="touchUpInside" id="0gc-T6-CtH"/>
                                 </connections>

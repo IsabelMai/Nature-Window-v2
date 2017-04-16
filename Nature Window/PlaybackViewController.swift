@@ -23,11 +23,14 @@ class PlaybackViewController: UIViewController {
     var audioReady: Bool = false //Flag to indicate if the audioPlayer has loaded the audio
     var imageReady: Bool = false //Flag to indicate if the image has loaded
     var currentSound: String? //Keeps track of the sound that is currently playing
-    //var currentImage: UIImage? //Keeps track of the image that is currently displayed (either imageOne or imageTwo)
+    var currentImage: Int? //Keeps track of the image that is currently displayed (either imageOne or imageTwo)
     var filteredSoundList = [Sound]() //Stores a filtered sound list (used when user shakes to play another sound)
     var shaken: Bool = false //Keeps track of whether the current song was initiated via a shake gesture
     var p_popUpVC: UIViewController? = nil //This variable stores the P_PopUpViewController
     var timer: Timer? = nil
+    
+    var url: URL?
+    var session: URLSession?
  
     @IBOutlet weak var playbackImage: UIImageView!
     
@@ -54,33 +57,43 @@ class PlaybackViewController: UIViewController {
         
         filteredSoundList = soundList
         
+        url = URL(string: selectedSound.imageURL!)!
+        let config = URLSessionConfiguration.default
+        config.requestCachePolicy = .reloadIgnoringLocalCacheData
+        config.urlCache = nil
+        
+        session = URLSession.init(configuration: config)
+        
     }
     
     //Puts starting images into a sound's imageOne and imageTwo variables when a new sound is selected
     func loadInitialImages() {
         if (checkIfSoundWasSelected()) {
             imageReady = false
-            let url: URL = URL(string: selectedSound.imageURL!)!
             
-            var session = URLSession.shared
-            var task = session.dataTask(with: url, completionHandler: {
+            
+            
+            //Reference: http://stackoverflow.com/questions/24328461/how-to-disable-caching-from-nsurlsessiontask
+                
+            /*let url: URL = URL(string: selectedSound.imageURL!)!
+            let config = URLSessionConfiguration.default
+            config.requestCachePolicy = .reloadIgnoringLocalCacheData
+            config.urlCache = nil
+                
+            let session = URLSession.init(configuration: config)*/
+                
+            //var session = URLSession.shared
+            
+            url = URL(string: selectedSound.imageURL!)!
+                
+            let task = self.session?.dataTask(with: self.url!, completionHandler: {
                 (data, response, error) in
                 if data != nil {
-                    self.selectedSound.imageOne = UIImage(data: data!)
-                    print("IMAGE ONE EXISTS")
+                    self.selectedSound.image = UIImage(data: data!)!
+                    print("IMAGE EXISTS")
                 }
             })
-            task.resume()
-            
-            session = URLSession.shared
-            task = session.dataTask(with: url, completionHandler: {
-                (data, response, error) in
-                if data != nil {
-                    self.selectedSound.imageTwo = UIImage(data: data!)
-                    print("IMAGE TWO EXISTS")
-                }
-            })
-            task.resume()
+            task?.resume()
             
         }
     }
@@ -112,8 +125,6 @@ class PlaybackViewController: UIViewController {
         if checkIfSoundWasSelected() && currentSound != selectedSound.name! {
             /*'shaken' is set to false because any sounds that are played in this function cannot be the result of a shake, since shakes can only occur when the user is already listening to a sound on this screen*/
             shaken = false
-            
-            //currentImage = selectedSound.imageOne
 
             backgroundImageView.image = nil
             loadingAnimation.startAnimating()
@@ -132,6 +143,8 @@ class PlaybackViewController: UIViewController {
             
             playNewSound()
             
+            //timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(PlaybackViewController.changeImage), userInfo: nil, repeats: true)
+            
         }
         else {
             print("Sound was NOT selected")
@@ -141,7 +154,7 @@ class PlaybackViewController: UIViewController {
     
     //Animation control: stop the loading animation if the image and sound have both loaded
     func stopAnimation() {
-        if selectedSound.imageOne != nil {
+        if selectedSound.image != nil {
             //backgroundImageView.image = selectedSound.imageOne
             //loadingAnimation.stopAnimating()
             imageReady = true
@@ -155,7 +168,7 @@ class PlaybackViewController: UIViewController {
         //If the audio and imageOne is ready, then play the audio and set the background image!
         if audioReady && imageReady {
             loadingAnimation.stopAnimating()
-            backgroundImageView.image = selectedSound.imageOne
+            backgroundImageView.image = selectedSound.image
             audioPlayer.play()
             print("TWO")
             timer?.invalidate()
@@ -195,6 +208,7 @@ class PlaybackViewController: UIViewController {
             //Set the filteredSoundList to equal the complete soundList, in preparation for the next shake
             filteredSoundList = soundList
             shaken = true
+            url = URL(string: selectedSound.imageURL!)!
             loadInitialImages()
             playNewSound()
             removeP_PopUp()
@@ -289,6 +303,30 @@ class PlaybackViewController: UIViewController {
             //})
         
         }
+    }
+    @IBAction func leftSwipe(_ sender: UISwipeGestureRecognizer) {
+        print("SWIPED")
+        
+        backgroundImageView.image = nil
+        loadingAnimation.startAnimating()
+        
+
+        
+        //var session = URLSession.shared
+        
+        let task = self.session?.dataTask(with: self.url!, completionHandler: {
+            (data, response, error) in
+            if data != nil {
+                self.selectedSound.image = UIImage(data: data!)!
+                self.backgroundImageView.image = self.selectedSound.image
+                print("IMAGE EXISTS")
+                
+                self.loadingAnimation.stopAnimating()
+            }
+        })
+        task?.resume()
+
+        
     }
 }
 

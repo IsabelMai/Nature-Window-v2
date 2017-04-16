@@ -15,8 +15,11 @@ class Sound: NSObject {
     var search: String?
     var locations = [String?]()
     
-    var imageOne: UIImage?
+    var image: UIImage?
     var imageTwo: UIImage?
+    var imageThree: UIImage?
+    var imageFour: UIImage?
+    var imageArray = [UIImage]()
     var imageURL: String?
     
     init(name: String) {

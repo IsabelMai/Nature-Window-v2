@@ -260,6 +260,7 @@
 				TargetAttributes = {
 					97E532981E907934001F7A44 = {
 						CreatedOnToolsVersion = 8.3;
+						DevelopmentTeam = GR6AYB877J;
 						ProvisioningStyle = Automatic;
 					};
 					97E532AE1E907935001F7A44 = {
@@ -624,6 +625,7 @@
 			baseConfigurationReference = F7E493672781B139F695B3D2 /* Pods-Nature Window.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = GR6AYB877J;
 				INFOPLIST_FILE = "Nature Window/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "monash.Nature-Window";
@@ -637,6 +639,7 @@
 			baseConfigurationReference = CEA4C69AB4728298E86E5231 /* Pods-Nature Window.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = GR6AYB877J;
 				INFOPLIST_FILE = "Nature Window/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "monash.Nature-Window";
