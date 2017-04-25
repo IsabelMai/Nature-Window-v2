@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		44FCFDB91C76C2B790528871 /* Pods_Nature_WindowTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75079B0350159A0ADAE3B7E7 /* Pods_Nature_WindowTests.framework */; };
 		615A8BCDDDBC8AC0B361A897 /* Pods_Nature_WindowUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84995303A713AE413B481BF9 /* Pods_Nature_WindowUITests.framework */; };
+		978D0DAF1EADCEC5001ED6A7 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978D0DAE1EADCEC5001ED6A7 /* MapViewController.swift */; };
+		978D0DB11EADDB50001ED6A7 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978D0DB01EADDB50001ED6A7 /* Location.swift */; };
 		979A8FA11E90896C002D24CB /* SoundTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979A8FA01E90896C002D24CB /* SoundTableViewCell.swift */; };
 		979A8FA31E908B55002D24CB /* SoundTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979A8FA21E908B55002D24CB /* SoundTableViewController.swift */; };
 		979A8FA51E909A1D002D24CB /* Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979A8FA41E909A1D002D24CB /* Sound.swift */; };
@@ -49,6 +51,8 @@
 		56BD17BA7A952764230A2F72 /* Pods_Nature_Window.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Nature_Window.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		75079B0350159A0ADAE3B7E7 /* Pods_Nature_WindowTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Nature_WindowTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		84995303A713AE413B481BF9 /* Pods_Nature_WindowUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Nature_WindowUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		978D0DAE1EADCEC5001ED6A7 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		978D0DB01EADDB50001ED6A7 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		979A8FA01E90896C002D24CB /* SoundTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundTableViewCell.swift; sourceTree = "<group>"; };
 		979A8FA21E908B55002D24CB /* SoundTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundTableViewController.swift; sourceTree = "<group>"; };
 		979A8FA41E909A1D002D24CB /* Sound.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sound.swift; sourceTree = "<group>"; };
@@ -153,9 +157,11 @@
 				97E5329E1E907934001F7A44 /* PlaybackViewController.swift */,
 				97E532A01E907934001F7A44 /* AboutViewController.swift */,
 				97E532A21E907934001F7A44 /* Main.storyboard */,
+				978D0DAE1EADCEC5001ED6A7 /* MapViewController.swift */,
 				97F288061E94EFC200BF7B04 /* P_PopUpViewController.swift */,
 				979A8FA21E908B55002D24CB /* SoundTableViewController.swift */,
 				979A8FA41E909A1D002D24CB /* Sound.swift */,
+				978D0DB01EADDB50001ED6A7 /* Location.swift */,
 				979A8FA01E90896C002D24CB /* SoundTableViewCell.swift */,
 				97E532A51E907935001F7A44 /* Assets.xcassets */,
 				97E532A71E907935001F7A44 /* LaunchScreen.storyboard */,
@@ -470,9 +476,11 @@
 				979A8FA51E909A1D002D24CB /* Sound.swift in Sources */,
 				97E5329D1E907934001F7A44 /* AppDelegate.swift in Sources */,
 				97E5329F1E907934001F7A44 /* PlaybackViewController.swift in Sources */,
+				978D0DB11EADDB50001ED6A7 /* Location.swift in Sources */,
 				979A8FA11E90896C002D24CB /* SoundTableViewCell.swift in Sources */,
 				979A8FA31E908B55002D24CB /* SoundTableViewController.swift in Sources */,
 				97F288071E94EFC200BF7B04 /* P_PopUpViewController.swift in Sources */,
+				978D0DAF1EADCEC5001ED6A7 /* MapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

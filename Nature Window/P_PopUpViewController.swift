@@ -20,14 +20,16 @@ class P_PopUpViewController: UIViewController, UITabBarControllerDelegate {
     //Get the audioPlayer object that was set in the PlaybackViewController
     var audioPlayer: AVAudioPlayer {
         get {
-            return (self.tabBarController!.viewControllers![1] as! PlaybackViewController).audioPlayer
+            //return (self.tabBarController!.viewControllers![1] as! PlaybackViewController).audioPlayer
+            return (self.tabBarController!.viewControllers![1].childViewControllers[0] as! PlaybackViewController).audioPlayer
         }
     }
     
     //Get the currentSound variable that was set in the PlaybackViewController
     var currentSound: String? {
         get {
-            return (self.tabBarController!.viewControllers![1] as! PlaybackViewController).currentSound
+            //return (self.tabBarController!.viewControllers![1] as! PlaybackViewController).currentSound
+            return (self.tabBarController!.viewControllers![1].childViewControllers[0] as! PlaybackViewController).currentSound
         }
     }
     
@@ -73,10 +75,12 @@ class P_PopUpViewController: UIViewController, UITabBarControllerDelegate {
     
     @IBAction func closePopUp(_ sender: Any) {
         self.view.removeFromSuperview()
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "TapNotification"), object: nil)
     }
     
     @IBAction func closePopUp2(_ sender: Any) {
         self.view.removeFromSuperview()
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "TapNotification"), object: nil)
     }
 
     @IBAction func playSound(_ sender: Any) {
@@ -106,6 +110,15 @@ class P_PopUpViewController: UIViewController, UITabBarControllerDelegate {
         audioPlayer.volume = volumeSlider.value
     }
    
+    @IBAction func showMap(_ sender: UIButton) {
+        let mapPopUpVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mapPopUpID") as! MapViewController
+        //p_popUpVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "playbackPopUpID") as! P_PopUpViewController
+        //Add the map view controller to our current view controller
+        self.addChildViewController(mapPopUpVC)
+        mapPopUpVC.view.frame = self.view.frame
+        self.view.addSubview((mapPopUpVC.view)!)
+        mapPopUpVC.didMove(toParentViewController: self)
+    }
   
     /*
     // MARK: - Navigation

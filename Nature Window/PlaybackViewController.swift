@@ -37,17 +37,20 @@ class PlaybackViewController: UIViewController {
     //Get the selectedSound object that was set in the SoundTableViewController
     var selectedSound: Sound {
         get {
-            return (self.tabBarController!.viewControllers![0] as! SoundTableViewController).selectedSound
+            //return (self.tabBarController!.viewControllers![0] as! SoundTableViewController).selectedSound
+            return (self.tabBarController!.viewControllers![0].childViewControllers[0] as! SoundTableViewController).selectedSound
         }
         set {
-            (self.tabBarController!.viewControllers![0] as! SoundTableViewController).selectedSound = newValue
+            //(self.tabBarController!.viewControllers![0] as! SoundTableViewController).selectedSound = newValue
+            (self.tabBarController!.viewControllers![0].childViewControllers[0] as! SoundTableViewController).selectedSound = newValue
         }
     }
 
     //Get the soundList array that was set in the SoundTableViewController
     var soundList: [Sound] {
         get {
-            return (self.tabBarController!.viewControllers![0] as! SoundTableViewController).soundList
+            //return (self.tabBarController!.viewControllers![0] as! SoundTableViewController).soundList
+            return (self.tabBarController!.viewControllers![0].childViewControllers[0] as! SoundTableViewController).soundList
         }
         //Do not need a a set function because we do not want to alter the soundList array
     }
@@ -55,9 +58,26 @@ class PlaybackViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = "Currently Playing"
+        
+        //Add notification listener to PlaybackViewController (used for hiding the navigation and tab bars)
+        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackViewController.removeBars), name: NSNotification.Name(rawValue: "TapNotification"), object: nil)
+        
         filteredSoundList = soundList
         
-        url = URL(string: selectedSound.imageURL!)!
+        let items = self.tabBarController?.tabBar.items
+        let tabItem = items![1]
+        tabItem.title = ""
+        
+        /*if (checkIfSoundWasSelected()) {
+            url = URL(string: selectedSound.imageURL!)!
+            let config = URLSessionConfiguration.default
+            config.requestCachePolicy = .reloadIgnoringLocalCacheData
+            config.urlCache = nil
+            
+            session = URLSession.init(configuration: config)
+        }*/
+        //url = URL(string: selectedSound.imageURL!)!
         let config = URLSessionConfiguration.default
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
         config.urlCache = nil
@@ -71,7 +91,7 @@ class PlaybackViewController: UIViewController {
         if (checkIfSoundWasSelected()) {
             imageReady = false
             
-            
+  
             
             //Reference: http://stackoverflow.com/questions/24328461/how-to-disable-caching-from-nsurlsessiontask
                 
@@ -85,15 +105,31 @@ class PlaybackViewController: UIViewController {
             //var session = URLSession.shared
             
             url = URL(string: selectedSound.imageURL!)!
+            
+            let data = NSData(contentsOf:url! as URL)
+            if data != nil {
+                //self.backgroundImageView.image = UIImage(data:data! as Data)
+                let newImage = UIImage(data: data! as Data)
+                let compressedImage = UIImageJPEGRepresentation(newImage!, 0.4)!
+                //self.selectedSound.image = UIImage(data: data!)!
+                self.selectedSound.image = UIImage(data: compressedImage)!
+                //self.selectedSound.image = UIImage(data: data!)!
+                //self.backgroundImageView.image = self.selectedSound.image
+                //self.loadingAnimation.stopAnimating()
                 
-            let task = self.session?.dataTask(with: self.url!, completionHandler: {
+            }
+            
+            /*let task = self.session?.dataTask(with: self.url!, completionHandler: {
                 (data, response, error) in
                 if data != nil {
-                    self.selectedSound.image = UIImage(data: data!)!
+                    let newImage = UIImage(data: data!)!
+                    let compressedImage = UIImageJPEGRepresentation(newImage, 0.4)!
+                    //self.selectedSound.image = UIImage(data: data!)!
+                    self.selectedSound.image = UIImage(data: compressedImage)!
                     print("IMAGE EXISTS")
                 }
-            })
-            task?.resume()
+            })*/
+            //task?.resume()
             
         }
     }
@@ -121,12 +157,25 @@ class PlaybackViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         
+        //Always hide the tab bar when the user navigated to this page and a sound is playing
+        if checkIfSoundWasSelected() {
+            setTabBarVisible(visible: false, animated: true)
+            navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == false, animated: true)
+        }
+        
         //Check if a new sound has been selected
         if checkIfSoundWasSelected() && currentSound != selectedSound.name! {
+            
+            //setTabBarVisible(visible: false, animated: true)
+            
             /*'shaken' is set to false because any sounds that are played in this function cannot be the result of a shake, since shakes can only occur when the user is already listening to a sound on this screen*/
             shaken = false
+            
+            //Hide navigation controller
+            //navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == false, animated: true)
 
             backgroundImageView.image = nil
+            loadingAnimation.isHidden = false
             loadingAnimation.startAnimating()
             
             //Calls the stopAnimation() function every second asynchronously
@@ -148,6 +197,7 @@ class PlaybackViewController: UIViewController {
         }
         else {
             print("Sound was NOT selected")
+            loadingAnimation.isHidden = true
         }
         
     }
@@ -183,14 +233,22 @@ class PlaybackViewController: UIViewController {
     //Display p_popUpView
     @IBAction func imageWasTapped(_ sender: UITapGestureRecognizer) {
         if noSoundLabel.isHidden && audioReady {
+            
+            setTabBarVisible(visible: true, animated: true)
+            navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == false, animated: true)
+            
             showP_PopUp()
+            //hideBars()
         }
     }
     
     //Detect shakes
     override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
         if event?.subtype == UIEventSubtype.motionShake && audioReady {
+            setTabBarVisible(visible: false, animated: true)
+            navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == false, animated: true)
             backgroundImageView.image = nil
+            loadingAnimation.isHidden = false
             loadingAnimation.startAnimating()
             timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(PlaybackViewController.stopAnimation), userInfo: nil, repeats: true)
             audioPlayer.stop()
@@ -272,6 +330,10 @@ class PlaybackViewController: UIViewController {
 
     }
     
+    /*func hideBars() {
+        //navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == false, animated: true)
+    }*/
+    
     func showP_PopUp() {
         
         p_popUpVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "playbackPopUpID") as! P_PopUpViewController
@@ -305,28 +367,92 @@ class PlaybackViewController: UIViewController {
         }
     }
     @IBAction func leftSwipe(_ sender: UISwipeGestureRecognizer) {
-        print("SWIPED")
-        
         backgroundImageView.image = nil
+        
+        print("SWIPED")
+    
         loadingAnimation.startAnimating()
         
 
         
         //var session = URLSession.shared
         
-        let task = self.session?.dataTask(with: self.url!, completionHandler: {
+        //Following call is skipped? Change to synchronous call
+        /*let task = self.session?.dataTask(with: self.url!, completionHandler: {
             (data, response, error) in
             if data != nil {
-                self.selectedSound.image = UIImage(data: data!)!
-                self.backgroundImageView.image = self.selectedSound.image
+                let newImage = UIImage(data: data!)!
+                let compressedImage = UIImageJPEGRepresentation(newImage, 0.4)!
+                //self.selectedSound.image = UIImage(data: data!)!
+                self.selectedSound.image = UIImage(data: compressedImage)!                //self.selectedSound.image = UIImage(data: data!)!
+                //self.backgroundImageView.image = self.selectedSound.image
                 print("IMAGE EXISTS")
                 
                 self.loadingAnimation.stopAnimating()
             }
         })
-        task?.resume()
-
+        task?.resume()*/
         
+        let url = NSURL(string: selectedSound.imageURL!)
+        let data = NSData(contentsOf:url! as URL)
+        if data != nil {
+            //self.backgroundImageView.image = UIImage(data:data! as Data)
+            let newImage = UIImage(data: data! as Data)
+            let compressedImage = UIImageJPEGRepresentation(newImage!, 0.4)!
+            //self.selectedSound.image = UIImage(data: data!)!
+            self.selectedSound.image = UIImage(data: compressedImage)!
+            //self.selectedSound.image = UIImage(data: data!)!
+            self.backgroundImageView.image = self.selectedSound.image
+            print("HELLO")
+            self.loadingAnimation.stopAnimating()
+
+        }
+        
+        //self.backgroundImageView.image = self.selectedSound.image
+    }
+    
+    //Reference: http://stackoverflow.com/questions/27008737/how-do-i-hide-show-tabbar-when-tapped-using-swift-in-ios8/27072876#27072876
+    func setTabBarVisible(visible:Bool, animated:Bool) {
+        
+        //* This cannot be called before viewDidLayoutSubviews(), because the frame is not set before this time
+        
+        // bail if the current state matches the desired state
+        if (tabBarIsVisible() == visible) { return }
+        
+        // get a frame calculation ready
+        let frame = self.tabBarController?.tabBar.frame
+        let height = frame?.size.height
+        let offsetY = (visible ? -height! : height)
+        
+        // zero duration means no animation
+        let duration:TimeInterval = (animated ? 0.2 : 0.0)
+        
+        //  animate the tabBar
+        if frame != nil {
+            UIView.animate(withDuration: duration) {
+                self.tabBarController?.tabBar.frame = frame!.offsetBy(dx: 0, dy: offsetY!)
+                return
+            }
+        }
+    }
+    
+    func tabBarIsVisible() ->Bool {
+        return (self.tabBarController?.tabBar.frame.origin.y)! < self.view.frame.maxY
+    }
+    
+    func removeBars() {
+        setTabBarVisible(visible: false, animated: true)
+        navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == false, animated: true)
+    }
+    
+    
+    //Reference: http://stackoverflow.com/questions/26273672/how-to-hide-status-bar-and-navigation-bar-when-tap-device & http://stackoverflow.com/questions/26273672/how-to-hide-status-bar-and-navigation-bar-when-tap-device
+    override var prefersStatusBarHidden: Bool {
+        return navigationController?.isNavigationBarHidden == true
+    }
+    
+    override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+        return .slide
     }
 }
 

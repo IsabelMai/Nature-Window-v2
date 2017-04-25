@@ -12,6 +12,12 @@ class AboutViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.title = "About"
+        
+        let items = self.tabBarController?.tabBar.items
+        let tabItem = items![2]
+        tabItem.title = ""
         // Do any additional setup after loading the view, typically from a nib.
     }
 

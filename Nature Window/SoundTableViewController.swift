@@ -16,16 +16,22 @@ class SoundTableViewController: UITableViewController {
     var refHandle: UInt!
     var soundList = [Sound]() //All sounds (retrieved from Firebase)
     var selectedSound : Sound = Sound(name: "default")  //Stores the sound that a user clicks on
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = "All Sounds"
+        
+        let items = self.tabBarController?.tabBar.items
+        let tabItem = items![0]
+        tabItem.title = ""
         
         ref = FIRDatabase.database().reference()
         fetchSounds()
         
+        
     }
+
     
     func fetchSounds() {
         refHandle = ref.child("Sounds").observe(.childAdded, with: { (snapshot) in
@@ -37,7 +43,6 @@ class SoundTableViewController: UITableViewController {
                 let sound = Sound(name: "filler")
                 sound.setValuesForKeys(dictionary)
                 
-                
                 print(sound.name!)
                 sound.imageURL = "https://source.unsplash.com/category/nature/?" + sound.search!
                 print(sound.imageURL!)
@@ -47,10 +52,13 @@ class SoundTableViewController: UITableViewController {
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
+                
+                print(self.soundList[0].locations?[0] as! String)
             }
             
             
         })
+        
 
     }
     

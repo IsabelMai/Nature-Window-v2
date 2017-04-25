@@ -13,7 +13,8 @@ class Sound: NSObject {
     var name: String?
     var audio: String?
     var search: String?
-    var locations = [String?]()
+    //var locations = [String?]()
+    var locations:NSArray? //Array of NSTaggedPointerString(s)
     
     var image: UIImage?
     var imageTwo: UIImage?
