@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import AVFoundation
+import SystemConfiguration
 
 class PlaybackViewController: UIViewController {
     
@@ -28,6 +29,7 @@ class PlaybackViewController: UIViewController {
     var shaken: Bool = false //Keeps track of whether the current song was initiated via a shake gesture
     var p_popUpVC: UIViewController? = nil //This variable stores the P_PopUpViewController
     var timer: Timer? = nil
+    var timer2: Timer? = nil
     
     var url: URL?
     var session: URLSession?
@@ -161,10 +163,15 @@ class PlaybackViewController: UIViewController {
         if checkIfSoundWasSelected() {
             setTabBarVisible(visible: false, animated: true)
             navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == false, animated: true)
+            
+            
         }
         
         //Check if a new sound has been selected
         if checkIfSoundWasSelected() && currentSound != selectedSound.name! {
+            
+            //Start a timer that continously checks if there is internet connectivity
+            timer2 = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(PlaybackViewController.checkInternet), userInfo: nil, repeats: true)
             
             //setTabBarVisible(visible: false, animated: true)
             
@@ -181,6 +188,10 @@ class PlaybackViewController: UIViewController {
             //Calls the stopAnimation() function every second asynchronously
             timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(PlaybackViewController.stopAnimation), userInfo: nil, repeats: true)
             
+            //Run a timer to continuously call a method to check if there is Internet connectivity
+            //Calls the stopAnimation() function every 30 seconds asynchronously
+            //timer2 = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(PlaybackViewController.checkInternet), userInfo: nil, repeats: true)
+            
             //Stops the audio when user selects a new song from the SoundTableView
             if audioReady {
                 if audioPlayer.isPlaying {
@@ -191,6 +202,8 @@ class PlaybackViewController: UIViewController {
             loadInitialImages()
             
             playNewSound()
+            
+            //timer2?.invalidate()
             
             //timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(PlaybackViewController.changeImage), userInfo: nil, repeats: true)
             
@@ -245,8 +258,22 @@ class PlaybackViewController: UIViewController {
     //Detect shakes
     override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
         if event?.subtype == UIEventSubtype.motionShake && audioReady {
-            setTabBarVisible(visible: false, animated: true)
-            navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == false, animated: true)
+            
+            checkInternet()
+            
+            //Only if both bars are displayed
+            if navigationController?.isNavigationBarHidden == false {
+                setTabBarVisible(visible: false, animated: true)
+                navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == false, animated: true)
+            }
+            
+            //Only if no bars are displayed
+            else {
+                setTabBarVisible(visible: false, animated: true)
+                navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == true, animated: true)
+            }
+            
+            
             backgroundImageView.image = nil
             loadingAnimation.isHidden = false
             loadingAnimation.startAnimating()
@@ -367,11 +394,13 @@ class PlaybackViewController: UIViewController {
         }
     }
     @IBAction func leftSwipe(_ sender: UISwipeGestureRecognizer) {
-        backgroundImageView.image = nil
+        //backgroundImageView.image = nil
         
         print("SWIPED")
+        
+        checkInternet()
     
-        loadingAnimation.startAnimating()
+        //loadingAnimation.startAnimating()
         
 
         
@@ -404,7 +433,7 @@ class PlaybackViewController: UIViewController {
             //self.selectedSound.image = UIImage(data: data!)!
             self.backgroundImageView.image = self.selectedSound.image
             print("HELLO")
-            self.loadingAnimation.stopAnimating()
+            //self.loadingAnimation.stopAnimating()
 
         }
         
@@ -453,6 +482,47 @@ class PlaybackViewController: UIViewController {
     
     override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
         return .slide
+    }
+    
+    //Reference: http://stackoverflow.com/questions/39558868/check-internet-connection-ios-10
+    func isInternetAvailable() -> Bool
+    {
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+        
+        let defaultRouteReachability = withUnsafePointer(to: &zeroAddress) {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {zeroSockAddress in
+                SCNetworkReachabilityCreateWithAddress(nil, zeroSockAddress)
+            }
+        }
+        
+        var flags = SCNetworkReachabilityFlags()
+        if !SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) {
+            return false
+        }
+        let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
+        let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
+        return (isReachable && !needsConnection)
+    }
+    
+    func checkInternet() {
+        
+        if !isInternetAvailable() {
+            
+            timer2?.invalidate()
+            
+            // create the alert
+            let alert = UIAlertController(title: "Oops!", message: "It seems like you're not connected to the Internet. This app requires Internet connectivity to load songs, images, and locations. Please make sure that you are connected to the Internet then restart this app.", preferredStyle: UIAlertControllerStyle.alert)
+            
+            // add an action (button)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            
+            //Show the alert
+            UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+            
+        }
+        
     }
 }
 

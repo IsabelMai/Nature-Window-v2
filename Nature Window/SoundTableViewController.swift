@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import FirebaseDatabase
+import SystemConfiguration
 
 class SoundTableViewController: UITableViewController {
     
@@ -26,12 +27,37 @@ class SoundTableViewController: UITableViewController {
         let tabItem = items![0]
         tabItem.title = ""
         
+        
+        
+        // show the alert
+        //self.present(alert, animated: true, completion: nil)
+        
+        //Reference: https://firebase.google.com/docs/database/ios/offline-capabilities#section-connection-state
+        /*let connectedRef = FIRDatabase.database().reference(withPath: ".info/connected")
+        connectedRef.observe(.value, with: { snapshot in
+            if snapshot.value as? Bool ?? false {
+                print("Connected")
+                self.ref = FIRDatabase.database().reference()
+                self.fetchSounds()
+            } else {
+                print("Not Connected")
+                // create the alert
+                let alert = UIAlertController(title: "Welcome!", message: "This is a note that this app requires an internet connection to run. Please check your internet connection if the table/list behind this pop-up does not load.", preferredStyle: UIAlertControllerStyle.alert)
+                
+                // add an action (button)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                
+                //Show the alert
+                UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+                
+            }
+        })*/
+        
         ref = FIRDatabase.database().reference()
         fetchSounds()
         
         
     }
-
     
     func fetchSounds() {
         refHandle = ref.child("Sounds").observe(.childAdded, with: { (snapshot) in
@@ -59,8 +85,49 @@ class SoundTableViewController: UITableViewController {
             
         })
         
+        checkInternet()
 
     }
+    
+    //Reference: http://stackoverflow.com/questions/39558868/check-internet-connection-ios-10
+    func isInternetAvailable() -> Bool
+    {
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+        
+        let defaultRouteReachability = withUnsafePointer(to: &zeroAddress) {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {zeroSockAddress in
+                SCNetworkReachabilityCreateWithAddress(nil, zeroSockAddress)
+            }
+        }
+        
+        var flags = SCNetworkReachabilityFlags()
+        if !SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) {
+            return false
+        }
+        let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
+        let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
+        return (isReachable && !needsConnection)
+    }
+    
+    func checkInternet() {
+        
+        if !isInternetAvailable() {
+            
+            // create the alert
+            let alert = UIAlertController(title: "Oops!", message: "It seems like you're not connected to the Internet. This app requires Internet connectivity to load songs, images, and locations. Please make sure that you are connected to the Internet then restart this app.", preferredStyle: UIAlertControllerStyle.alert)
+            
+            // add an action (button)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            
+            //Show the alert
+            UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+            
+        }
+        
+    }
+
     
     //Get the row/section that the user clicks on
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -107,6 +174,7 @@ class SoundTableViewController: UITableViewController {
         return cell
 
     }
+    
     
 
     /*
