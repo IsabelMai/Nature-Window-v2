@@ -61,16 +61,22 @@ class P_PopUpViewController: UIViewController, UITabBarControllerDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         
+        volumeSlider.value = audioPlayer.volume
+        
         nameLabel.text = currentSound
         
         if audioPlayer.isPlaying {
             playButton.isHidden = true
             pauseButton.isHidden = false
+            
+            //Fix this
+            //volumeSlider.value = audioPlayer.volume
         }
         else {
             playButton.isHidden = false
             pauseButton.isHidden = true
         }
+        
     }
     
     @IBAction func closePopUp(_ sender: Any) {
@@ -108,6 +114,7 @@ class P_PopUpViewController: UIViewController, UITabBarControllerDelegate {
     //Volume control
     @IBAction func changeVolume(_ sender: UISlider) {
         audioPlayer.volume = volumeSlider.value
+        //volumeSlider.value = audioPlayer.volume
     }
    
     @IBAction func showMap(_ sender: UIButton) {

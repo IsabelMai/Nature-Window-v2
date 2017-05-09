@@ -33,12 +33,6 @@ class MapViewController: UIViewController {
         
         centerMapOnLocation(location: initialLocation)
         
-        //Need a way to grab the Locations array from the selectedSound
-        //Loop through the Locations array
-            //Split each index value into the latitude, latitude, title, and subtitle values
-            //Refer to last slide in Week 6 lecture to add annotation to the map
-        
-
         
         //Loop through the different locations of the Sound object
         for (_, element) in (selectedSound.locations?.enumerated())! {
@@ -58,11 +52,6 @@ class MapViewController: UIViewController {
         }
         
         
-        /*let myCoordinate = CLLocationCoordinate2D(latitude: -36.686043, longitude: 143.580322)
-        let annot = Location(title: "Title", locationName: "Subtitle", coordinate: myCoordinate)
-        
-        mapView.addAnnotation(annot)
-        mapView.setCenter(annot.coordinate, animated: true)*/
         
     }
     

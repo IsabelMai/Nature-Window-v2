@@ -5,7 +5,6 @@
 //  Created by Isabel Mai on 2/4/17.
 //  Copyright © 2017 Isabel Mai. All rights reserved.
 //
-
 import UIKit
 import Firebase
 import AVFoundation
@@ -33,7 +32,7 @@ class PlaybackViewController: UIViewController {
     
     var url: URL?
     var session: URLSession?
- 
+    
     @IBOutlet weak var playbackImage: UIImageView!
     
     //Get the selectedSound object that was set in the SoundTableViewController
@@ -47,7 +46,7 @@ class PlaybackViewController: UIViewController {
             (self.tabBarController!.viewControllers![0].childViewControllers[0] as! SoundTableViewController).selectedSound = newValue
         }
     }
-
+    
     //Get the soundList array that was set in the SoundTableViewController
     var soundList: [Sound] {
         get {
@@ -56,7 +55,7 @@ class PlaybackViewController: UIViewController {
         }
         //Do not need a a set function because we do not want to alter the soundList array
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -71,14 +70,16 @@ class PlaybackViewController: UIViewController {
         let tabItem = items![1]
         tabItem.title = ""
         
+        applyMotionEffect(toView: backgroundImageView, magnitude: 40)
+        
         /*if (checkIfSoundWasSelected()) {
-            url = URL(string: selectedSound.imageURL!)!
-            let config = URLSessionConfiguration.default
-            config.requestCachePolicy = .reloadIgnoringLocalCacheData
-            config.urlCache = nil
-            
-            session = URLSession.init(configuration: config)
-        }*/
+         url = URL(string: selectedSound.imageURL!)!
+         let config = URLSessionConfiguration.default
+         config.requestCachePolicy = .reloadIgnoringLocalCacheData
+         config.urlCache = nil
+         
+         session = URLSession.init(configuration: config)
+         }*/
         //url = URL(string: selectedSound.imageURL!)!
         let config = URLSessionConfiguration.default
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
@@ -93,17 +94,17 @@ class PlaybackViewController: UIViewController {
         if (checkIfSoundWasSelected()) {
             imageReady = false
             
-  
+            
             
             //Reference: http://stackoverflow.com/questions/24328461/how-to-disable-caching-from-nsurlsessiontask
-                
+            
             /*let url: URL = URL(string: selectedSound.imageURL!)!
-            let config = URLSessionConfiguration.default
-            config.requestCachePolicy = .reloadIgnoringLocalCacheData
-            config.urlCache = nil
-                
-            let session = URLSession.init(configuration: config)*/
-                
+             let config = URLSessionConfiguration.default
+             config.requestCachePolicy = .reloadIgnoringLocalCacheData
+             config.urlCache = nil
+             
+             let session = URLSession.init(configuration: config)*/
+            
             //var session = URLSession.shared
             
             url = URL(string: selectedSound.imageURL!)!
@@ -122,15 +123,15 @@ class PlaybackViewController: UIViewController {
             }
             
             /*let task = self.session?.dataTask(with: self.url!, completionHandler: {
-                (data, response, error) in
-                if data != nil {
-                    let newImage = UIImage(data: data!)!
-                    let compressedImage = UIImageJPEGRepresentation(newImage, 0.4)!
-                    //self.selectedSound.image = UIImage(data: data!)!
-                    self.selectedSound.image = UIImage(data: compressedImage)!
-                    print("IMAGE EXISTS")
-                }
-            })*/
+             (data, response, error) in
+             if data != nil {
+             let newImage = UIImage(data: data!)!
+             let compressedImage = UIImageJPEGRepresentation(newImage, 0.4)!
+             //self.selectedSound.image = UIImage(data: data!)!
+             self.selectedSound.image = UIImage(data: compressedImage)!
+             print("IMAGE EXISTS")
+             }
+             })*/
             //task?.resume()
             
         }
@@ -151,7 +152,7 @@ class PlaybackViewController: UIViewController {
         
         return selected
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -163,7 +164,6 @@ class PlaybackViewController: UIViewController {
         if checkIfSoundWasSelected() {
             setTabBarVisible(visible: false, animated: true)
             navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == false, animated: true)
-            
             
         }
         
@@ -180,7 +180,6 @@ class PlaybackViewController: UIViewController {
             
             //Hide navigation controller
             //navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == false, animated: true)
-
             backgroundImageView.image = nil
             loadingAnimation.isHidden = false
             loadingAnimation.startAnimating()
@@ -237,12 +236,12 @@ class PlaybackViewController: UIViewController {
             timer?.invalidate()
         }
         /*else {
-            backgroundImageView.image = nil
-            loadingAnimation.startAnimating()
-            print("THREE")
-        }*/
+         backgroundImageView.image = nil
+         loadingAnimation.startAnimating()
+         print("THREE")
+         }*/
     }
-
+    
     //Display p_popUpView
     @IBAction func imageWasTapped(_ sender: UITapGestureRecognizer) {
         if noSoundLabel.isHidden && audioReady {
@@ -266,8 +265,8 @@ class PlaybackViewController: UIViewController {
                 setTabBarVisible(visible: false, animated: true)
                 navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == false, animated: true)
             }
-            
-            //Only if no bars are displayed
+                
+                //Only if no bars are displayed
             else {
                 setTabBarVisible(visible: false, animated: true)
                 navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == true, animated: true)
@@ -341,8 +340,8 @@ class PlaybackViewController: UIViewController {
                     
                     
                     /*if self.shaken {
-                        self.showP_PopUp()
-                    }*/
+                     self.showP_PopUp()
+                     }*/
                 }
                 catch let error as NSError
                 {
@@ -354,12 +353,12 @@ class PlaybackViewController: UIViewController {
                 
             }
         }
-
+        
     }
     
     /*func hideBars() {
-        //navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == false, animated: true)
-    }*/
+     //navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == false, animated: true)
+     }*/
     
     func showP_PopUp() {
         
@@ -372,25 +371,24 @@ class PlaybackViewController: UIViewController {
         
         //Remove this pop up after 2 seconds if the current song was initiated via a shake
         /*if shaken {
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
-                p_popUpVC.willMove(toParentViewController: nil)
-                p_popUpVC.view.removeFromSuperview()
-                p_popUpVC.removeFromParentViewController()
-            })
-
-        }*/
+         
+         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+         p_popUpVC.willMove(toParentViewController: nil)
+         p_popUpVC.view.removeFromSuperview()
+         p_popUpVC.removeFromParentViewController()
+         })
+         }*/
     }
     
     func removeP_PopUp() {
         if p_popUpVC != nil && shaken {
-
+            
             //DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
-                self.p_popUpVC?.willMove(toParentViewController: nil)
-                self.p_popUpVC?.view.removeFromSuperview()
-                self.p_popUpVC?.removeFromParentViewController()
+            self.p_popUpVC?.willMove(toParentViewController: nil)
+            self.p_popUpVC?.view.removeFromSuperview()
+            self.p_popUpVC?.removeFromParentViewController()
             //})
-        
+            
         }
     }
     @IBAction func leftSwipe(_ sender: UISwipeGestureRecognizer) {
@@ -399,28 +397,28 @@ class PlaybackViewController: UIViewController {
         print("SWIPED")
         
         checkInternet()
-    
+        
         //loadingAnimation.startAnimating()
         
-
+        
         
         //var session = URLSession.shared
         
         //Following call is skipped? Change to synchronous call
         /*let task = self.session?.dataTask(with: self.url!, completionHandler: {
-            (data, response, error) in
-            if data != nil {
-                let newImage = UIImage(data: data!)!
-                let compressedImage = UIImageJPEGRepresentation(newImage, 0.4)!
-                //self.selectedSound.image = UIImage(data: data!)!
-                self.selectedSound.image = UIImage(data: compressedImage)!                //self.selectedSound.image = UIImage(data: data!)!
-                //self.backgroundImageView.image = self.selectedSound.image
-                print("IMAGE EXISTS")
-                
-                self.loadingAnimation.stopAnimating()
-            }
-        })
-        task?.resume()*/
+         (data, response, error) in
+         if data != nil {
+         let newImage = UIImage(data: data!)!
+         let compressedImage = UIImageJPEGRepresentation(newImage, 0.4)!
+         //self.selectedSound.image = UIImage(data: data!)!
+         self.selectedSound.image = UIImage(data: compressedImage)!                //self.selectedSound.image = UIImage(data: data!)!
+         //self.backgroundImageView.image = self.selectedSound.image
+         print("IMAGE EXISTS")
+         
+         self.loadingAnimation.stopAnimating()
+         }
+         })
+         task?.resume()*/
         
         let url = NSURL(string: selectedSound.imageURL!)
         let data = NSData(contentsOf:url! as URL)
@@ -434,7 +432,6 @@ class PlaybackViewController: UIViewController {
             self.backgroundImageView.image = self.selectedSound.image
             print("HELLO")
             //self.loadingAnimation.stopAnimating()
-
         }
         
         //self.backgroundImageView.image = self.selectedSound.image
@@ -472,6 +469,9 @@ class PlaybackViewController: UIViewController {
     func removeBars() {
         setTabBarVisible(visible: false, animated: true)
         navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == false, animated: true)
+        
+        
+
     }
     
     
@@ -524,5 +524,19 @@ class PlaybackViewController: UIViewController {
         }
         
     }
+    
+    func applyMotionEffect(toView view:UIView, magnitude: Float) {
+        let xMotion = UIInterpolatingMotionEffect(keyPath: "center.x", type: .tiltAlongHorizontalAxis)
+        xMotion.minimumRelativeValue = -magnitude
+        xMotion.maximumRelativeValue = magnitude
+        
+        let yMotion = UIInterpolatingMotionEffect(keyPath: "center.y", type: .tiltAlongVerticalAxis)
+        yMotion.minimumRelativeValue = -magnitude
+        yMotion.maximumRelativeValue = magnitude
+        
+        let group = UIMotionEffectGroup()
+        group.motionEffects = [xMotion, yMotion]
+        
+        view.addMotionEffect(group)
+    }
 }
-

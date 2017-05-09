@@ -79,7 +79,7 @@ class SoundTableViewController: UITableViewController {
                     self.tableView.reloadData()
                 }
                 
-                print(self.soundList[0].locations?[0] as! String)
+                //print(self.soundList[0].locations?[0] as! String)
             }
             
             
