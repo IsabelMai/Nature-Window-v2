@@ -24,11 +24,17 @@ PODS:
   - GoogleToolboxForMac/NSData+zlib (2.1.1):
     - GoogleToolboxForMac/Defines (= 2.1.1)
   - GTMSessionFetcher/Core (1.1.9)
+  - SDWebImage (3.8.2):
+    - SDWebImage/Core (= 3.8.2)
+  - SDWebImage/Core (3.8.2)
+  - TableViewReloadAnimation (0.0.5)
 
 DEPENDENCIES:
   - Firebase/Core
   - Firebase/Database
   - Firebase/Storage
+  - SDWebImage (~> 3.8)
+  - TableViewReloadAnimation (~> 0.0.5)
 
 SPEC CHECKSUMS:
   Firebase: 2b1cdfba1cda8589f32904a697cc753322bff9d8
@@ -39,7 +45,9 @@ SPEC CHECKSUMS:
   FirebaseStorage: a5c55b23741a49a72af8f30f95b3bb5ddbeda12d
   GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
   GTMSessionFetcher: 5c046c76a1f859bc9c187e918f18e4fc7bb57b5e
+  SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
+  TableViewReloadAnimation: f3a4c4048efbc56331be98075f26a2e533a14c16
 
-PODFILE CHECKSUM: 4508528ef31242b2e35ccc660c0d8d78c0fe579b
+PODFILE CHECKSUM: 08843018ad9fc67d02860f7e81cf4cc592115c97
 
 COCOAPODS: 1.2.0

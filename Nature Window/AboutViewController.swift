@@ -18,7 +18,6 @@ class AboutViewController: UIViewController {
         let items = self.tabBarController?.tabBar.items
         let tabItem = items![2]
         tabItem.title = ""
-        // Do any additional setup after loading the view, typically from a nib.
     }
 
     override func didReceiveMemoryWarning() {

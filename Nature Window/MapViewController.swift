@@ -13,11 +13,12 @@ class MapViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
     
+    //Set the zoom radius for the map
     let regionRadius: CLLocationDistance = 500000
     
+    //Get the selectedSound from the SoundTableViewController
     var selectedSound: Sound {
         get {
-            //return (self.tabBarController!.viewControllers![0] as! SoundTableViewController).selectedSound
             return (self.tabBarController!.viewControllers![0].childViewControllers[0] as! SoundTableViewController).selectedSound
         }
     }
@@ -25,14 +26,10 @@ class MapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        //print(selectedSound.locations?[0] as! String)
         //Set initial location to Victoria
         self.view.backgroundColor = UIColor.white.withAlphaComponent(0.4)
-        
         let initialLocation = CLLocation(latitude: -36.686043, longitude: 143.580322)
-        
         centerMapOnLocation(location: initialLocation)
-        
         
         //Loop through the different locations of the Sound object
         for (_, element) in (selectedSound.locations?.enumerated())! {
@@ -46,12 +43,10 @@ class MapViewController: UIViewController {
             let myCoordinate = CLLocationCoordinate2D(latitude: Double(lat)!, longitude: Double(long)!)
             let annot = Location(title: title, locationName: subtitle, coordinate: myCoordinate)
             
+            //Add marker to map
             mapView.addAnnotation(annot)
             mapView.setCenter(annot.coordinate, animated: true)
-            
         }
-        
-        
         
     }
     
@@ -64,7 +59,6 @@ class MapViewController: UIViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     @IBAction func closeMap(_ sender: UIButton) {

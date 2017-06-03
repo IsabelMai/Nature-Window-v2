@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5AC86E4698BEFBBBBEC14CC6245914EA"
+               BlueprintIdentifier = "E6A92CF5EA05CA6FEDFB249DDA5489F5"
                BuildableName = "Pods_Nature_Window.framework"
                BlueprintName = "Pods-Nature Window"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5AC86E4698BEFBBBBEC14CC6245914EA"
+            BlueprintIdentifier = "E6A92CF5EA05CA6FEDFB249DDA5489F5"
             BuildableName = "Pods_Nature_Window.framework"
             BlueprintName = "Pods-Nature Window"
             ReferencedContainer = "container:Pods.xcodeproj">

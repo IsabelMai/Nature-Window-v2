@@ -29,6 +29,16 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>SDWebImage.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>TableViewReloadAnimation.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
@@ -37,12 +47,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>5AC86E4698BEFBBBBEC14CC6245914EA</key>
+		<key>35B24C13590AEA5B2906A00F658621DC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>647348BDFE9CD37F08575BECDF10FF2B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>AA4DAE5553A45141CA111D356C894587</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -53,6 +68,11 @@
 			<true/>
 		</dict>
 		<key>C92F33BC851115AF9696E898FEC22323</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E6A92CF5EA05CA6FEDFB249DDA5489F5</key>
 		<dict>
 			<key>primary</key>
 			<true/>

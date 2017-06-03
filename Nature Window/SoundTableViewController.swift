@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 import SystemConfiguration
+import TableViewReloadAnimation
 
 class SoundTableViewController: UITableViewController {
     
@@ -17,6 +18,15 @@ class SoundTableViewController: UITableViewController {
     var refHandle: UInt!
     var soundList = [Sound]() //All sounds (retrieved from Firebase)
     var selectedSound : Sound = Sound(name: "default")  //Stores the sound that a user clicks on
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        //Rotation 3D animation when table data reloads
+        tableView.reloadData(
+            with: .simple(duration: 0.75, direction: .rotation3D(type: .doctorStrange),
+                          constantDelay: 0))
+        
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,61 +37,29 @@ class SoundTableViewController: UITableViewController {
         let tabItem = items![0]
         tabItem.title = ""
         
-        
-        
-        // show the alert
-        //self.present(alert, animated: true, completion: nil)
-        
-        //Reference: https://firebase.google.com/docs/database/ios/offline-capabilities#section-connection-state
-        /*let connectedRef = FIRDatabase.database().reference(withPath: ".info/connected")
-        connectedRef.observe(.value, with: { snapshot in
-            if snapshot.value as? Bool ?? false {
-                print("Connected")
-                self.ref = FIRDatabase.database().reference()
-                self.fetchSounds()
-            } else {
-                print("Not Connected")
-                // create the alert
-                let alert = UIAlertController(title: "Welcome!", message: "This is a note that this app requires an internet connection to run. Please check your internet connection if the table/list behind this pop-up does not load.", preferredStyle: UIAlertControllerStyle.alert)
-                
-                // add an action (button)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                
-                //Show the alert
-                UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
-                
-            }
-        })*/
-        
         ref = FIRDatabase.database().reference()
         fetchSounds()
         
         
     }
     
+    //Get all sounds from Firebase
     func fetchSounds() {
         refHandle = ref.child("Sounds").observe(.childAdded, with: { (snapshot) in
             
             if let dictionary = snapshot.value as? [String: AnyObject] {
-                
-                print(dictionary)
-                
                 let sound = Sound(name: "filler")
                 sound.setValuesForKeys(dictionary)
-                
-                print(sound.name!)
                 sound.imageURL = "https://source.unsplash.com/category/nature/?" + sound.search!
-                print(sound.imageURL!)
-                
                 self.soundList.append(sound)
                 
                 DispatchQueue.main.async {
-                    self.tableView.reloadData()
+                    //Rotation 3D animation when table data reloads
+                    self.tableView.reloadData(
+                        with: .simple(duration: 0.75, direction: .rotation3D(type: .doctorStrange),
+                                      constantDelay: 0))
                 }
-                
-                //print(self.soundList[0].locations?[0] as! String)
             }
-            
             
         })
         
@@ -89,7 +67,6 @@ class SoundTableViewController: UITableViewController {
 
     }
     
-    //Reference: http://stackoverflow.com/questions/39558868/check-internet-connection-ios-10
     func isInternetAvailable() -> Bool
     {
         var zeroAddress = sockaddr_in()
@@ -115,15 +92,10 @@ class SoundTableViewController: UITableViewController {
         
         if !isInternetAvailable() {
             
-            // create the alert
+            //Create alert
             let alert = UIAlertController(title: "Oops!", message: "It seems like you're not connected to the Internet. This app requires Internet connectivity to load songs, images, and locations. Please make sure that you are connected to the Internet then restart this app.", preferredStyle: UIAlertControllerStyle.alert)
-            
-            // add an action (button)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            
-            //Show the alert
             UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
-            
         }
         
     }
@@ -131,10 +103,8 @@ class SoundTableViewController: UITableViewController {
     
     //Get the row/section that the user clicks on
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("section: \(indexPath.section)")
-        print("row: \(indexPath.row)")
         selectedSound = soundList[indexPath.row]
-        //Switch view controller to the PlayBackViewController
+        //Switch the view controller to the PlayBackViewController
         tabBarController?.selectedIndex = 1
     }
 
@@ -163,7 +133,7 @@ class SoundTableViewController: UITableViewController {
         //Table view cells are reused and should be dequeued using a cell identifier.
         let cellIdentifier = "SoundTableViewCell"
         
-        //Downcast returned UITableViewCell class to MonsterTableViewCell class
+        //Downcast returned UITableViewCell class to SoundTableViewCell class
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? SoundTableViewCell else {
             fatalError("The dequeued cell is not an instance of SoundTableViewCell.")
         }
