@@ -22,6 +22,7 @@ class SoundTableViewController: UITableViewController {
     override func viewDidAppear(_ animated: Bool) {
         
         //Rotation 3D animation when table data reloads
+        //Reference: https://github.com/ioramashvili/TableViewReloadAnimation
         tableView.reloadData(
             with: .simple(duration: 0.75, direction: .rotation3D(type: .doctorStrange),
                           constantDelay: 0))
@@ -39,8 +40,7 @@ class SoundTableViewController: UITableViewController {
         
         ref = FIRDatabase.database().reference()
         fetchSounds()
-        
-        
+
     }
     
     //Get all sounds from Firebase
@@ -55,6 +55,7 @@ class SoundTableViewController: UITableViewController {
                 
                 DispatchQueue.main.async {
                     //Rotation 3D animation when table data reloads
+                    //Reference: https://github.com/ioramashvili/TableViewReloadAnimation
                     self.tableView.reloadData(
                         with: .simple(duration: 0.75, direction: .rotation3D(type: .doctorStrange),
                                       constantDelay: 0))
@@ -67,6 +68,7 @@ class SoundTableViewController: UITableViewController {
 
     }
     
+    //Reference: http://stackoverflow.com/questions/39558868/check-internet-connection-ios-10
     func isInternetAvailable() -> Bool
     {
         var zeroAddress = sockaddr_in()
@@ -105,6 +107,7 @@ class SoundTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedSound = soundList[indexPath.row]
         //Switch the view controller to the PlayBackViewController
+        //Reference: http://stackoverflow.com/questions/28454960/passing-data-from-one-tab-controller-to-another-in-swift
         tabBarController?.selectedIndex = 1
     }
 
@@ -113,24 +116,18 @@ class SoundTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        
         return soundList.count
-
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        //Table view cells are reused and should be dequeued using a cell identifier.
+        //Table view cells are reused and dequeued using a cell identifier.
         let cellIdentifier = "SoundTableViewCell"
         
         //Downcast returned UITableViewCell class to SoundTableViewCell class

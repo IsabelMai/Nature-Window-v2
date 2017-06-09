@@ -61,6 +61,7 @@ class MapViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
+    //Remove map
     @IBAction func closeMap(_ sender: UIButton) {
         self.view.removeFromSuperview()
     }

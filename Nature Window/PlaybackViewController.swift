@@ -57,6 +57,7 @@ class PlaybackViewController: UIViewController {
         self.title = "Currently Playing"
         
         //Add notification listener to PlaybackViewController (used for hiding the navigation and tab bars)
+        //Reference: https://developer.apple.com/documentation/foundation/nsnotificationcenter
         NotificationCenter.default.addObserver(self, selector: #selector(PlaybackViewController.removeBars), name: NSNotification.Name(rawValue: "TapNotification"), object: nil)
         
         filteredSoundList = soundList
@@ -67,12 +68,14 @@ class PlaybackViewController: UIViewController {
         
         applyMotionEffect(toView: backgroundImageView, magnitude: 40)
         
+        //Reference: https://developer.apple.com/documentation/foundation/urlsessionconfiguration
         let config = URLSessionConfiguration.default
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
         config.urlCache = nil
         
         session = URLSession.init(configuration: config)
         
+        //Reference: https://developer.apple.com/documentation/avfoundation/avaudiosession
         do {
             try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: .mixWithOthers)
             print("AVAudioSession Category Playback OK")
@@ -137,6 +140,7 @@ class PlaybackViewController: UIViewController {
         if checkIfSoundWasSelected() && currentSound != selectedSound.name! {
             
             //Start a timer that continously checks if there is internet connectivity
+            //Reference: https://developer.apple.com/documentation/foundation/timer
             timer2 = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(PlaybackViewController.checkInternet), userInfo: nil, repeats: true)
             
             /*'shaken' is set to false because any sounds that are played in this function cannot be the result of a shake, since shakes can only occur when the user is already listening to a sound on this screen*/
@@ -176,6 +180,7 @@ class PlaybackViewController: UIViewController {
         //If the audio and image is ready, then play the audio and set the background image
         if audioReady && imageReady {
             loadingAnimation.stopAnimating()
+            //Reference: https://developer.apple.com/documentation/uikit/uiview
             UIView.transition(with: self.backgroundImageView,
                               duration: 1,
                               options: .transitionCrossDissolve,
@@ -205,13 +210,11 @@ class PlaybackViewController: UIViewController {
             
             checkInternet()
             
-            //Only if both bars are displayed
+            //Remove all bars
             if navigationController?.isNavigationBarHidden == false {
                 setTabBarVisible(visible: false, animated: true)
                 navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == false, animated: true)
             }
-                
-            //Only if no bars are displayed
             else {
                 setTabBarVisible(visible: false, animated: true)
                 navigationController?.setNavigationBarHidden(navigationController?.isNavigationBarHidden == true, animated: true)
@@ -237,8 +240,7 @@ class PlaybackViewController: UIViewController {
             //Set the filteredSoundList to equal the complete soundList, in preparation for the next shake
             filteredSoundList = soundList
             shaken = true
-            
-            url = URL(string: selectedSound.imageURL!)!
+
             loadInitialImages()
             playNewSound()
             removeP_PopUp()
@@ -256,11 +258,13 @@ class PlaybackViewController: UIViewController {
         let audioRef = storageRef.child(audioString!)
         
         //Create a local filesystem URL
+        //Reference: https://stackoverflow.com/questions/32278436/play-local-audio-file-with-avaudioplayer
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let localURL = documentsURL.appendingPathComponent(selectedSound.name!)
         currentSound = selectedSound.name!
         
         //Download to the local filesystem
+        //Reference: https://developer.apple.com/reference/avfoundation/avaudioplayer
         _ = audioRef.write(toFile: localURL) { url, error in
             if let error = error {
                 print("Uh-oh, an error occurred!")
@@ -328,6 +332,7 @@ class PlaybackViewController: UIViewController {
     }
     
     //Show/hide tabBar
+    //Reference: http://stackoverflow.com/questions/27008737/how-do-i-hide-show-tabbar-when-tapped-using-swift-in-ios8/27072876#27072876
     func setTabBarVisible(visible:Bool, animated:Bool) {
         if (tabBarIsVisible() == visible) { return }
         
@@ -360,6 +365,7 @@ class PlaybackViewController: UIViewController {
     }
     
     //Setting status bar preferences
+    //Reference: http://stackoverflow.com/questions/26273672/how-to-hide-status-bar-and-navigation-bar-when-tap-device
     override var prefersStatusBarHidden: Bool {
         return navigationController?.isNavigationBarHidden == true
     }
@@ -370,6 +376,7 @@ class PlaybackViewController: UIViewController {
     }
     
     //Check Internet connection
+    //Reference: http://stackoverflow.com/questions/39558868/check-internet-connection-ios-10
     func isInternetAvailable() -> Bool {
         var zeroAddress = sockaddr_in()
         zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
@@ -407,6 +414,7 @@ class PlaybackViewController: UIViewController {
     }
     
     //Parallax
+    //Reference: https://developer.apple.com/reference/uikit
     func applyMotionEffect(toView view:UIView, magnitude: Float) {
         let xMotion = UIInterpolatingMotionEffect(keyPath: "center.x", type: .tiltAlongHorizontalAxis)
         xMotion.minimumRelativeValue = -magnitude

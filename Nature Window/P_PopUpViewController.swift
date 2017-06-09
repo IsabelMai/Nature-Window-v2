@@ -71,6 +71,7 @@ class P_PopUpViewController: UIViewController, UITabBarControllerDelegate {
     }
     
     //Remove this view from the PlayBackViewController
+    //Reference: https://developer.apple.com/documentation/foundation/nsnotificationcenter
     @IBAction func closePopUp(_ sender: Any) {
         self.view.removeFromSuperview()
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "TapNotification"), object: nil)
